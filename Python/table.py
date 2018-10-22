@@ -8,12 +8,10 @@ class Table():
 	def __init__(self, tableName, load=False):
 		self.tableName = tableName
 		self.memtable = Memtable(tableName)
-		# TODO: load schema from meta -> do we need schema?
 		if load:
 			self._load_meta()
 		else:
 			self.entries = 0
-		self.schema = {}
 		self.ystore = Ystore(tableName)
 		self.yindex = Yindex(tableName)
 		self._write_meta()
@@ -35,7 +33,6 @@ class Table():
 		self.entries += 1
 		if memFull:
 			self.spill()
-		# self.updateSchema(columns)
 		return True
 
 
@@ -86,16 +83,16 @@ class Table():
 		return self.memtable.setLimit(newLimit)
 
 
-	def updateSchema(self, columns):
-		for fam in columns:
-			if fam in self.schema:
-				for col in columns[fam]:
-					if not col in self.schema[fam]:
-						self.schema[fam].add(col)
-			else:
-				self.schema[fam] = set()
-				for col in columns[fam]:
-					self.schema[fam].add(col)
+	# def updateSchema(self, columns):
+	# 	for fam in columns:
+	# 		if fam in self.schema:
+	# 			for col in columns[fam]:
+	# 				if not col in self.schema[fam]:
+	# 					self.schema[fam].add(col)
+	# 		else:
+	# 			self.schema[fam] = set()
+	# 			for col in columns[fam]:
+	# 				self.schema[fam].add(col)
 
 
 	def open(self):
@@ -106,16 +103,16 @@ class Table():
 		self.spill()
 		del self.memtable
 
-	def printSchema(self):
-		print("Schema for {}:".format(self.tableName))
-		start = '['
-		for fam in self.schema:
-			s = '{' + "{}:\t".format(fam)
-			for col in self.schema[fam]:
-				s = "{}{}, ".format(s, col)
-			start += s + '}, '
-		start += ']'
-		print(start)
+	# def printSchema(self):
+	# 	print("Schema for {}:".format(self.tableName))
+	# 	start = '['
+	# 	for fam in self.schema:
+	# 		s = '{' + "{}:\t".format(fam)
+	# 		for col in self.schema[fam]:
+	# 			s = "{}{}, ".format(s, col)
+	# 		start += s + '}, '
+	# 	start += ']'
+	# 	print(start)
 
 	def spill(self):
 		print("Spilling to disk")

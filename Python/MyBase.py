@@ -1,5 +1,5 @@
 from table import Table
-import utils
+# import utils
 
 class MyBase:
 
@@ -165,14 +165,14 @@ class MyBase:
 			print("Something went wrong with getColumnByRow")
 		return data
 
-	def getSchema(self, tableName):
-		"""
-		Unused for now, not sure its needed
-		"""
-		if not tableName in self.tables:
-			print("{} doesn't exist".format(tableName))
-			return False
-		self.tableSessions[tableName]['table_obj'].printSchema()
+	# def getSchema(self, tableName):
+	# 	"""
+	# 	Unused for now, not sure its needed
+	# 	"""
+	# 	if not tableName in self.tables:
+	# 		print("{} doesn't exist".format(tableName))
+	# 		return False
+	# 	self.tableSessions[tableName]['table_obj'].printSchema()
 
 	def memTableLimit(self, tableName, newLimit):
 		"""

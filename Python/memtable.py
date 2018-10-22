@@ -15,6 +15,7 @@ class Memtable:
 			self.count += 1
 		else:
 			self.entries[idx] = {'key': rowKey, 'val': columns}
+		# TODO: sort
 		if self.count > self.limit:
 			return True
 		return False
@@ -39,6 +40,11 @@ class Memtable:
 				hits.append(self.entries[idx])
 
 		return hits, misses
+
+
+	def setLimit(self, newLimit):
+		self.limit = newLimit
+		return True
 
 	def flush(self):
 		temp = copy.deepcopy(self.entries)

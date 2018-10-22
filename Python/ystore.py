@@ -28,3 +28,7 @@ class Ystore:
 			f.seek(offset)
 			temp = f.read(size)
 		return json.loads(temp)
+
+	# TODO: remove all artifacts
+	def destroy(self):
+		return True

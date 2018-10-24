@@ -19,7 +19,7 @@ class MyBase:
 			self._load_meta()
 
 
-	def openTable(self, tableName, load=False):
+	def openTable(self, tableName, load=True):
 		"""
 		Explicit opening of table and loading into memory. TODO: expand to have timeout on lease
 		"""

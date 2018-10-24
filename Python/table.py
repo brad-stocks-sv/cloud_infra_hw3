@@ -1,4 +1,5 @@
 import os
+import json
 from memtable import Memtable
 from ystore import Ystore
 from yindex import Yindex
@@ -37,7 +38,6 @@ class Table():
 		if memFull:
 			self.spill()
 		self.updateSchema(columns)
-		print(self.schema)
 		return True
 
 
@@ -91,15 +91,20 @@ class Table():
 
 
 	def updateSchema(self, columns):
+		changes = False
 		for fam in columns:
 			if fam in self.schema:
 				for col in columns[fam]:
 					if not col in self.schema[fam]:
-						self.schema[fam].add(col)
+						changes = True
+						self.schema[fam].append(col)
 			else:
-				self.schema[fam] = set()
+				self.schema[fam] = []
 				for col in columns[fam]:
-					self.schema[fam].add(col)
+					changes = True
+					self.schema[fam].append(col)
+		if changes:
+			self._write_meta()
 
 
 	def open(self):
@@ -129,11 +134,17 @@ class Table():
 		self.memindex.populate()
 
 	def _load_meta(self):
-		with open('./meta/{}.txt'.format(self.tableName), 'r') as f:
-			self.entries = int(f.readline())
+		if os.path.exists('./meta/{}.txt'.format(self.tableName)):
+			with open('./meta/{}.txt'.format(self.tableName), 'r') as f:
+				self.entries = int(f.readline())
+				self.schema = json.loads(f.readline())
+		else:
+			self.schema = {}
+			self.entries = 0
 
 	def _write_meta(self):
 		if not os.path.isdir("./meta"):
 			os.makedirs("./meta")
 		with open('./meta/{}.txt'.format(self.tableName), 'w') as f:
-			f.write(str(self.entries))
+			f.write(str(self.entries)+"\n")
+			f.write(json.dumps(self.schema))

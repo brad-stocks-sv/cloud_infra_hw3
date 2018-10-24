@@ -2,6 +2,7 @@ import os
 from memtable import Memtable
 from ystore import Ystore
 from yindex import Yindex
+from memindex import Memindex
 
 class Table():
 
@@ -12,8 +13,10 @@ class Table():
 			self._load_meta()
 		else:
 			self.entries = 0
+			self.schema = {}
 		self.ystore = Ystore(tableName)
 		self.yindex = Yindex(tableName)
+		self.memindex = Memindex(tableName, self.yindex)
 		self._write_meta()
 
 	def destroy(self):
@@ -33,6 +36,8 @@ class Table():
 		self.entries += 1
 		if memFull:
 			self.spill()
+		self.updateSchema(columns)
+		print(self.schema)
 		return True
 
 
@@ -41,15 +46,17 @@ class Table():
 		if memFind:
 			temp = {memFind['key']: memFind['val']}
 			return temp	
-		data = self.yindex.get(rowKey)
+		data = self.memindex.get(rowKey)
+		# data = self.yindex.get(rowKey)
 		if not data:
 			print("Couldn't find row with key: {}".format(rowKey))
 			return None
-		return self.ystore.get(data[0], data[1])
+		return self.ystore.get(data['offset'], data['size'])
 
 	def getRows(self, startRow, endRow):
 		memFind = self.memtable.getRange(startRow, endRow)
-		storeFind = self.yindex.getRange(startRow, endRow)
+		# storeFind = self.yindex.getRange(startRow, endRow)
+		storeFind = self.memindex.getRange(startRow, endRow)
 		memFind_keys = set()
 		only_store = []
 		mem_temp = []
@@ -58,8 +65,8 @@ class Table():
 			mem_temp.append({i['key']:i['val']})
 		rows = mem_temp
 		for s in storeFind:
-			if not s[0] in memFind_keys:
-				only_store.append((s[1], s[2]))
+			if not s['key'] in memFind_keys:
+				only_store.append((s['offset'], s['size']))
 		for t in only_store:
 			rows.append(self.ystore.get(t[0], t[1]))
 		return rows
@@ -69,7 +76,7 @@ class Table():
 		row = row[rowKey]
 		data = {fam:{}}
 		if not fam in row:
-			print("{} not present in row".format(q))
+			print("{} not present in row".format(fam))
 			return None
 		for q in quals:
 			if not q in row[fam]:
@@ -83,16 +90,16 @@ class Table():
 		return self.memtable.setLimit(newLimit)
 
 
-	# def updateSchema(self, columns):
-	# 	for fam in columns:
-	# 		if fam in self.schema:
-	# 			for col in columns[fam]:
-	# 				if not col in self.schema[fam]:
-	# 					self.schema[fam].add(col)
-	# 		else:
-	# 			self.schema[fam] = set()
-	# 			for col in columns[fam]:
-	# 				self.schema[fam].add(col)
+	def updateSchema(self, columns):
+		for fam in columns:
+			if fam in self.schema:
+				for col in columns[fam]:
+					if not col in self.schema[fam]:
+						self.schema[fam].add(col)
+			else:
+				self.schema[fam] = set()
+				for col in columns[fam]:
+					self.schema[fam].add(col)
 
 
 	def open(self):
@@ -103,22 +110,23 @@ class Table():
 		self.spill()
 		del self.memtable
 
-	# def printSchema(self):
-	# 	print("Schema for {}:".format(self.tableName))
-	# 	start = '['
-	# 	for fam in self.schema:
-	# 		s = '{' + "{}:\t".format(fam)
-	# 		for col in self.schema[fam]:
-	# 			s = "{}{}, ".format(s, col)
-	# 		start += s + '}, '
-	# 	start += ']'
-	# 	print(start)
+	def printSchema(self):
+		print("Schema for {}:".format(self.tableName))
+		start = '['
+		for fam in self.schema:
+			s = '{' + "{}:\t".format(fam)
+			for col in self.schema[fam]:
+				s = "{}{}, ".format(s, col)
+			start += s + '}, '
+		start += ']'
+		print(start)
 
 	def spill(self):
 		print("Spilling to disk")
 		memTableContents = self.memtable.flush()
 		idx_updates = self.ystore.store(memTableContents)
 		self.yindex.update(idx_updates)
+		self.memindex.populate()
 
 	def _load_meta(self):
 		with open('./meta/{}.txt'.format(self.tableName), 'r') as f:

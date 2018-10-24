@@ -19,7 +19,7 @@ class MyBase:
 			self._load_meta()
 
 
-	def openTable(self, tableName):
+	def openTable(self, tableName, load=False):
 		"""
 		Explicit opening of table and loading into memory. TODO: expand to have timeout on lease
 		"""
@@ -30,11 +30,12 @@ class MyBase:
 			# Create session in memory
 			self.tableSessions[tableName] = {
 				'count': 1, 
-				'table_obj': Table(tableName)
+				'table_obj': Table(tableName, load=load)
 				}
 		else:
 			# add new session for table already in memory
 			self.tableSessions[tableName]['count'] += 1
+		print("Opened new session for table: {}".format(tableName))
 		return True
 
 	def closeTable(self, tableName):
@@ -55,7 +56,7 @@ class MyBase:
 			print("Moved {} out of memory".format(tableName))
 		return True
 
-	def createTable(self, tableName, auto_open=True):
+	def createTable(self, tableName, auto_open=False):
 		"""
 		Create a new table with name tableName, check if table already exists before
 		doing so. If auto_open enabled (default) add a session and load into memory
@@ -69,7 +70,7 @@ class MyBase:
 		# update meta data for recovery
 		self._update_meta()
 		if auto_open:
-			self.openTable(tableName)
+			self.openTable(tableName, load=False)
 		return True
 
 	def destroyTable(self, tableName):
@@ -84,11 +85,12 @@ class MyBase:
 		if not tableName in self.tables:
 			print("{} doesn't exist and can't be destroyed".format(tableName))
 			return False
-		# Kill it
-		deleted = self.tables[tableName].destroy()
+		# TODO: this doesn't really work
+		deleted = Table(tableName).destroy()
 		if deleted:
 			print("{} was successfully destroyed".format(tableName))
-			del self.tables[tableName]
+			# del self.tables[tableName]
+			self.tables.remove(tableName)
 			self._update_meta()
 			return True
 		else:

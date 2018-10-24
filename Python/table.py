@@ -12,6 +12,7 @@ class Table():
 		self.memtable = Memtable(tableName)
 		if load:
 			self._load_meta()
+			self.recover()
 		else:
 			self.entries = 0
 			self.schema = {}
@@ -33,12 +34,27 @@ class Table():
 		self.spill()
 
 	def putRow(self, rowKey, columns):
+		self._write_WAL(rowKey, columns)
 		memFull = self.memtable.put(rowKey, columns)
 		self.entries += 1
 		if memFull:
 			self.spill()
 		self.updateSchema(columns)
 		return True
+
+	def recover(self):
+		if os.path.exists("./WAL/{}.txt".format(self.tableName)):
+			with open("./WAL/{}.txt".format(self.tableName), 'r') as f:
+				recovery_count = 0
+				commands = []
+				for line in f:
+					commands.append(json.loads(line))
+					recovery_count += 1
+				for c in commands:
+					self.putRow(c['rowKey'], c['columns'])
+			if recovery_count > 0:
+				print("Recovered {} entries from WAL".format(recovery_count))
+
 
 
 	def getRow(self, rowKey):
@@ -132,6 +148,7 @@ class Table():
 		idx_updates = self.ystore.store(memTableContents)
 		self.yindex.update(idx_updates)
 		self.memindex.populate()
+		self._clear_WAL()
 
 	def _load_meta(self):
 		if os.path.exists('./meta/{}.txt'.format(self.tableName)):
@@ -148,3 +165,15 @@ class Table():
 		with open('./meta/{}.txt'.format(self.tableName), 'w') as f:
 			f.write(str(self.entries)+"\n")
 			f.write(json.dumps(self.schema))
+
+	def _write_WAL(self, rowKey, columns):
+		if not os.path.isdir("./WAL"):
+			os.makedirs("./WAL")
+		with open("./WAL/{}.txt".format(self.tableName), 'a') as f:
+			log = {'rowKey': rowKey, 'columns': columns}
+			f.write(json.dumps(log) + "\n")
+
+
+	def _clear_WAL(self):
+		if os.path.exists("./WAL/{}.txt".format(self.tableName)):
+			open('./WAL/{}.txt'.format(self.tableName), 'w').close()

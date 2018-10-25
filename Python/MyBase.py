@@ -221,6 +221,17 @@ class MyBase:
 				return True
 		return False
 
+	def closeAll(self):
+		if len(self.tableSessions) > 0:
+			print("Auto-closing the following tables")
+			names = []
+			for table in self.tableSessions:
+				print(table)
+				names.append(table)
+			# to avoid dic changing size in loop
+			for n in names:
+				self.closeTable(n)
+
 	def _update_meta(self):
 		"""
 		Update the persistent meta store with new table list

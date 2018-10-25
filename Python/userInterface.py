@@ -15,7 +15,6 @@ def main():
 		clearLeadingSpaces(response)
 		if response[0] == "api":
 			printAPI()
-			
 		elif response[0] == 'getschema':
 			if checkResponse(response, 2):
 				base.getSchema(response[1])
@@ -67,6 +66,8 @@ def main():
 		else:
 			print("Invalid command, please consult API:")
 			printAPI()
+
+	base.closeAll()
 
 
 def clearLeadingSpaces(response):

@@ -89,6 +89,7 @@ def printAPI():
 	print("getRows, <tableName>, <startKey>, <endKey> - fetch all the rows within the specified range of keys.\n\ttableName: string\n\tstartKey: string\n\tendKey: string")
 	print("getColumnByRow, <tableName>, <rowKey>, <family>, <qualifiers> - get the specific columns with the given family for the provided key. \n\ttableName: string\n\trowKey: string\n\tfamily - string\n\tqualifiers - list of string eg. ['first', 'last']")
 	print("memTableLimit, <tableName>, <limit> - set the new limit for the number of entries in the memtable for the given table.\n\ttableName: string\n\tlimit: integer")
+	print("getSchema, <tableName> - view the current schema for the table.\n\ttableName: string")
 
 def checkResponse(response, i):
 	if len(response) < i:

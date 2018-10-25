@@ -22,12 +22,10 @@ class Table():
 		self._write_meta()
 
 	def destroy(self):
-		del self.memtable
 		self.yindex.destroy()
-		del self.yindex
-		del self.schema
 		self.ystore.destroy()
-		del self.ystore
+		os.remove("./WAL/{}.txt".format(self.tableName))
+		os.remove("./meta/{}.txt".format(self.tableName))
 		return True
 
 	def close(self):

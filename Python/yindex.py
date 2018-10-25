@@ -56,5 +56,6 @@ class Yindex:
 	# TODO: remove all files and artifacts on destroy
 	def destroy(self):
 		self.conn.close()
+		os.remove(self.path)
 
 

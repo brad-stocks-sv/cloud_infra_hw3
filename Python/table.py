@@ -24,8 +24,10 @@ class Table():
 	def destroy(self):
 		self.yindex.destroy()
 		self.ystore.destroy()
-		os.remove("./WAL/{}.txt".format(self.tableName))
-		os.remove("./meta/{}.txt".format(self.tableName))
+		if os.path.exists("./WAL/{}.txt".format(self.tableName)):
+			os.remove("./WAL/{}.txt".format(self.tableName))
+		if os.path.exists("./meta/{}.txt".format(self.tableName)):
+			os.remove("./meta/{}.txt".format(self.tableName))
 		return True
 
 	def close(self):

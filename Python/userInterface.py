@@ -42,7 +42,8 @@ def main():
 			
 		elif response[0] == 'putrow':
 			if checkResponse(response, 4):
-				columns = json.loads(response[3])
+				temp = ','.join(response[3:])
+				columns = json.loads(temp)
 				base.putRow(response[1], response[2], columns)
 			
 		elif response[0] == 'getrow':
@@ -55,7 +56,8 @@ def main():
 			
 		elif response[0] == 'getcolumnbyrow':
 			if checkResponse(response, 5):
-				quals = json.loads(response[5])
+				temp = ','.join(response[5:])
+				quals = json.loads(temp)
 				print(base.getColumnByRow(response[1], response[2], response[3], quals))
 			
 		elif response[0] == 'memtablelimit':

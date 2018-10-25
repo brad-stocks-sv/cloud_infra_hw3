@@ -31,4 +31,5 @@ class Ystore:
 
 	# TODO: remove all artifacts
 	def destroy(self):
-		os.remove(self.path)
+		if os.path.exists(self.path):
+			os.remove(self.path)

@@ -194,6 +194,16 @@ class MyBase:
 			print("Set memtable limit for {} to {}".format(tableName, newLimit))
 			return True
 
+
+	def getSchema(self, tableName):
+		if not tableName in self.tables:
+			print("{} doesn't exist".format(tableName))
+			return False
+		if not tableName in self.tableSessions:
+			print("Table is not currently open, please call openTable() first")
+			return False
+		print(self.tableSessions[tableName]['table_obj'].schema)
+
 	def _load_meta(self):
 		"""
 		Populate the list of all tables stored in persistent meta (just names, nothing

@@ -62,7 +62,8 @@ def main():
 			if checkResponse(response, 3):
 				quals = json.loads(response[5])
 				base.memTableLimit(response[1], int(response[2]))
-			
+		elif response[0] == "exit" or response[0] == 'quit':
+			continue
 		else:
 			print("Invalid command, please consult API:")
 			printAPI()

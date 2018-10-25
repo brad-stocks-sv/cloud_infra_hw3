@@ -23,8 +23,6 @@ class Memindex:
 	def getRange(self, start, end):
 		start_idx = self._checkRange(start, low=True)
 		end_idx = self._checkRange(end, low=False)
-		print(start_idx)
-		print(end_idx)
 		hits = self.entries[start_idx:end_idx+1]
 		return hits
 

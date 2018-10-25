@@ -131,7 +131,7 @@ class MyBase:
 
 		row = self.tableSessions[tableName]['table_obj'].getRow(rowKey)
 		if not row:
-			print("Unable to complete get operation")
+			print("No results returned")
 		return row
 
 	def getRows(self, tableName, startRow, endRow):
@@ -147,7 +147,7 @@ class MyBase:
 
 		rows = self.tableSessions[tableName]['table_obj'].getRows(startRow, endRow)
 		if not rows:
-			print("Unable to complete get operation")
+			print("No results returned")
 		return rows
 
 	def getColumnByRow(self, tableName, rowKey, family, qualifiers):
@@ -164,7 +164,7 @@ class MyBase:
 
 		data = self.tableSessions[tableName]['table_obj'].getColumnByRow(rowKey, family, qualifiers)
 		if not data:
-			print("Something went wrong with getColumnByRow")
+			print("No results returned")
 		return data
 
 	# def getSchema(self, tableName):

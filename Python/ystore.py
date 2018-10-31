@@ -15,12 +15,14 @@ class Ystore:
 		updates = []
 		with open(self.path, 'a') as f:
 			currOffset = f.tell()
+			dump_str = ''
 			for entry in memTable:
 				temp = json.dumps({entry['key']: entry['val']})
+				dump_str += temp
 				size = len(temp)
-				f.write(temp)
 				updates.append({'key':entry['key'], 'offset':currOffset, 'size':size})
-				currOffset = f.tell()
+				currOffset += size
+			f.write(dump_str)
 		return updates
 
 	def get(self, offset, size):

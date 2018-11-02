@@ -1,4 +1,0 @@
-{"rowKey": " bstocks", "columns": {"name": {"first": "brad"}}}
-{"rowKey": " bstocks", "columns": {"name": {"first": "brad"}}}
-{"rowKey": " bstocks", "columns": {"name": {"first": "brad"}}}
-{"rowKey": " bstocks", "columns": {"name": {"first": "brad"}}}

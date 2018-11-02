@@ -17,7 +17,7 @@ class Memindex:
 	def get(self, rowKey):
 		idx = self._check(rowKey)
 		if idx == -1:
-			return None
+			return ''
 		return self.entries[idx]
 
 	def getRange(self, start, end):

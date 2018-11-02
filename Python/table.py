@@ -66,7 +66,7 @@ class Table():
 		# data = self.yindex.get(rowKey)
 		if not data:
 			print("Couldn't find row with key: {}".format(rowKey))
-			return None
+			return ''
 		return self.ystore.get(data['offset'], data['size'])
 
 	def getRows(self, startRow, endRow):
@@ -93,11 +93,11 @@ class Table():
 		data = {fam:{}}
 		if not fam in row:
 			print("{} not present in row".format(fam))
-			return None
+			return ''
 		for q in quals:
 			if not q in row[fam]:
 				print("{} not present in row".format(q))
-				return None
+				return ''
 			data[fam][q] = row[fam][q]
 		return data
 

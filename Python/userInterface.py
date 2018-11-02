@@ -1,8 +1,9 @@
 from MyBase import MyBase
+from client import Client
 import json
 
 def main():
-	base = MyBase()
+	base = Client()
 	response = ['']
 	print("Welcome to MyBase!!!")
 	print("Basic Commands:")
@@ -24,9 +25,7 @@ def main():
 		elif response[0] == "createtable":
 			if checkResponse(response, 2):
 				autoOpen = False
-				if len(response) > 2:
-					autoOpen = response[2] == "true"
-				base.createTable(response[1], autoOpen)
+				base.createTable(response[1])
 			
 		elif response[0] == 'destroytable':
 			if checkResponse(response, 2):
@@ -70,7 +69,7 @@ def main():
 			print("Invalid command, please consult API:")
 			printAPI()
 
-	base.closeAll()
+	base.close()
 
 
 def clearLeadingSpaces(response):

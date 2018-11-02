@@ -49,11 +49,14 @@ class MyBase:
 			return False
 		self.tableSessions[tableName]['count'] -= 1
 		print("Closed user session for {}, current user count {}".format(tableName, self.tableSessions[tableName]['count']))
+		self.tableSessions[tableName]['table_obj'].close()
+		del self.tableSessions[tableName]
+		print("Moved {} out of memory".format(tableName))
 		# Check if all sessions closed
-		if self.tableSessions[tableName]['count'] == 0:
-			self.tableSessions[tableName]['table_obj'].close()
-			del self.tableSessions[tableName]
-			print("Moved {} out of memory".format(tableName))
+		# if self.tableSessions[tableName]['count'] == 0:
+		# 	self.tableSessions[tableName]['table_obj'].close()
+		# 	del self.tableSessions[tableName]
+		# 	print("Moved {} out of memory".format(tableName))
 		return True
 
 	def createTable(self, tableName, auto_open=False):
@@ -167,14 +170,6 @@ class MyBase:
 			print("No results returned")
 		return data
 
-	# def getSchema(self, tableName):
-	# 	"""
-	# 	Unused for now, not sure its needed
-	# 	"""
-	# 	if not tableName in self.tables:
-	# 		print("{} doesn't exist".format(tableName))
-	# 		return False
-	# 	self.tableSessions[tableName]['table_obj'].printSchema()
 
 	def memTableLimit(self, tableName, newLimit):
 		"""
@@ -202,7 +197,7 @@ class MyBase:
 		if not tableName in self.tableSessions:
 			print("Table is not currently open, please call openTable() first")
 			return False
-		print(self.tableSessions[tableName]['table_obj'].schema)
+		return self.tableSessions[tableName]['table_obj'].schema
 
 	def _load_meta(self):
 		"""

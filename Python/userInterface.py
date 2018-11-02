@@ -8,7 +8,6 @@ def main():
 	print("Welcome to MyBase!!!")
 	print("Basic Commands:")
 	print("API - display all API calls and usage")
-	print("List - list all tables available")
 	print("exit/quit - end the program")
 	while response[0] != "exit" and response[0] != 'quit':
 		response = input(">>> ").split(',')
@@ -19,8 +18,6 @@ def main():
 		elif response[0] == 'getschema':
 			if checkResponse(response, 2):
 				base.getSchema(response[1])
-		elif response[0] == 'list':
-			print(base.tables)
 
 		elif response[0] == "createtable":
 			if checkResponse(response, 2):

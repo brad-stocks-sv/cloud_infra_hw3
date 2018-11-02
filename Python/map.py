@@ -14,9 +14,9 @@ SERVERS = [
 			]
 
 # MAP_IP = "54.202.219.21"
-MAP_IP = 'localhost'
+# MAP_IP = 'localhost'
 # MAP_IP = "172.31.33.28"
-# MAP_IP = socket.gethostbyname(socket.gethostname())
+MAP_IP = socket.gethostbyname(socket.gethostname())
 
 class Server:
 

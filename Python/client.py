@@ -4,8 +4,8 @@ import random
 
 
 class Client:
-	# MAP_IP = "54.202.219.21"
-	MAP_IP = "localhost"
+	MAP_IP = "54.202.219.21"
+	# MAP_IP = "localhost"
 	MAP_PORT = 12345
 	SERVER_PORT = 1234
 	MAP_URL = "http://{}:{}/".format(MAP_IP, MAP_PORT)

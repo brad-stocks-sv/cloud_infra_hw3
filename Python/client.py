@@ -47,11 +47,13 @@ class Client:
 				return server.getRow(tableName, rowKey)
 
 	def putRow(self, tableName, rowKey, columns):
-		server_ip = self.mapper.get_server(self.client_name, tableName, rowKey)
-		if server_ip:
+		server_ips = self.mapper.get_server(self.client_name, tableName, rowKey, put=True)
+		success = True
+		for server_ip in server_ips:
 			server_url = "http://{}:{}/".format(server_ip, self.server_port)
 			with xmlrpc.client.ServerProxy(server_url) as server:
-				return server.putRow(tableName, rowKey, columns)
+				success = success and server.putRow(tableName, rowKey, columns)
+		return success
 
 	def getRows(self, tableName, startRow, endRow):
 		servers = self.mapper.get_rows(self.client_name, tableName, startRow, endRow)

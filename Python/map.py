@@ -42,11 +42,12 @@ class Server:
 
 class Map:
 
-	def __init__(self, fresh_start=False):
+	def __init__(self, fresh_start=False, W=2):
 		self.num_servers = len(SERVERS)
 		self.server_file = 'servers.json'
 		self.tables_file = 'tables.json'
 		self.table_leases = {}
+		self.W = W
 		self.clients = {}
 		self.servers = []
 		for s in SERVERS:
@@ -62,7 +63,7 @@ class Map:
 			self._load_data()
 
 
-	def get_server(self, client_name, tableName, key):
+	def get_server(self, client_name, tableName, key, put=False):
 		if client_name not in self.clients:
 			print("{} has not registered".format(client_name))
 			return False
@@ -72,7 +73,13 @@ class Map:
 		lower_key = key.lower()
 		for i, server in enumerate(self.servers):
 			if lower_key >= server.tables[tableName]['start'] and lower_key < server.tables[tableName]['end']:
-				return server.ip
+				if put:
+					servers = [server.ip]
+					for j in range(1, self.W):
+						servers.W.append(self.servers[(i+j)%self.num_servers].ip)
+					return servers
+				else: 
+					return server.ip
 		print("This is an invalid key with no corresponding server")
 		return ''
 

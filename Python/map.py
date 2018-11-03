@@ -5,13 +5,7 @@ import socket
 
 MY_PORT = 12345
 PORT = 1234
-SERVERS = [
-			"35.166.106.4",
-			 "54.202.23.56",
-			 "54.186.9.90",
-			 "54.71.110.37",
-			 "34.213.163.149",
-			]
+SERVERS = ["35.166.106.4", "54.202.23.56", "54.186.9.90", "54.71.110.37", "34.213.163.149"]
 
 # MAP_IP = "54.202.219.21"
 # MAP_IP = 'localhost'
@@ -183,7 +177,7 @@ class Map:
 			return False
 		success = True
 		for s in self.servers:
-			url = "http://{}:{}/".format(server.ip, PORT)
+			url = "http://{}:{}/".format(s.ip, PORT)
 			with xmlrpc.client.ServerProxy(url) as curr_server:
 				success = success and curr_server.destroyTable(tableName)
 		if success:

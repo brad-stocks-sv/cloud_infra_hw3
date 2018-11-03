@@ -7,7 +7,7 @@ def populate_marriages(filepath):
         reader = csv.reader(f)
         for row in reader:
             lists.append(row)
-    base = Client(fresh_start=True)
+    base = Client()
     base.createTable("Marriages", auto_open=False)
     base.openTable("Marriages")
     base.memTableLimit("Marriages", 25)

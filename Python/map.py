@@ -42,7 +42,7 @@ class Server:
 
 class Map:
 
-	def __init__(self, fresh_start=False, W=2):
+	def __init__(self, fresh_start=True, W=2):
 		self.num_servers = len(SERVERS)
 		self.server_file = 'servers.json'
 		self.tables_file = 'tables.json'
@@ -78,7 +78,7 @@ class Map:
 					for j in range(1, self.W):
 						servers.W.append(self.servers[(i+j)%self.num_servers].ip)
 					return servers
-				else: 
+				else:
 					return server.ip
 		print("This is an invalid key with no corresponding server")
 		return ''
@@ -122,7 +122,7 @@ class Map:
 				url = "http://{}:{}/".format(server.ip, PORT)
 				with xmlrpc.client.ServerProxy(url) as curr_server:
 					success = success and curr_server.openTable(tableName)
-			
+
 			self.table_leases[tableName] = {
 							'count': 1, 'clients': [client_name]
 							}
@@ -152,7 +152,7 @@ class Map:
 		else:
 			print("Something has gone wrong in closing the table")
 			return False
-			
+
 	def create_table(self, client_name, tableName):
 		if client_name not in self.clients:
 			print("{} has not registered".format(client_name))

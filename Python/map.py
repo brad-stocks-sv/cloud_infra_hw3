@@ -69,7 +69,7 @@ class Map:
 			if lower_key >= server.tables[tableName]['start'] and lower_key < server.tables[tableName]['end']:
 				if put:
 					servers = [server.ip]
-					for j in range(1, self.W):
+					for j in range(1, servers.W):
 						servers.W.append(self.servers[(i+j)%self.num_servers].ip)
 					return servers
 				else:

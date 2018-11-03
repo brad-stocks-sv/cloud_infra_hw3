@@ -9,7 +9,7 @@ class Client:
 	MAP_PORT = 12345
 	SERVER_PORT = 1234
 	MAP_URL = "http://{}:{}/".format(MAP_IP, MAP_PORT)
-	
+
 	def __init__(self, map_ip=MAP_IP, map_port=MAP_PORT, server_port=SERVER_PORT):
 		self.map_ip = map_ip
 		self.map_port = map_port
@@ -47,7 +47,7 @@ class Client:
 				return server.getRow(tableName, rowKey)
 
 	def putRow(self, tableName, rowKey, columns):
-		server_ips = self.mapper.get_server(self.client_name, tableName, rowKey, put=True)
+		server_ips = self.mapper.get_server(self.client_name, tableName, rowKey, True)
 		success = True
 		for server_ip in server_ips:
 			server_url = "http://{}:{}/".format(server_ip, self.server_port)

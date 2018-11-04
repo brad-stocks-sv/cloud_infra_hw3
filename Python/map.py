@@ -70,7 +70,7 @@ class Map:
 				if put:
 					servers = [server.ip]
 					for j in range(1, self.W):
-						server.W.append(self.servers[(i+j)%self.num_servers].ip)
+						servers.append(self.servers[(i+j)%self.num_servers].ip)
 					return servers
 				else:
 					return server.ip

@@ -73,7 +73,7 @@ class Map:
 						servers.append(self.servers[(i+j)%self.num_servers].ip)
 					return servers
 				else:
-					return [server.ip]
+					return server.ip
 		print("This is an invalid key with no corresponding server")
 		return ''
 

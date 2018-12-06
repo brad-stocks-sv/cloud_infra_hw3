@@ -4,7 +4,7 @@ import random
 
 
 class Client:
-	MAP_IP = "52.36.33.247"
+	MAP_IP = "54.245.212.135"
 	# MAP_IP = "localhost"
 	MAP_PORT = 12345
 	SERVER_PORT = 1234
